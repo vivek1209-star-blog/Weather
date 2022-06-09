@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-import Weather from "./components/Weather";
+import Weather, { data } from "./components/Weather";
 import { fetchPhotos } from "./services/fetchPhotos";
 import { fetchWeather } from "./services/fetchWeather";
 import "./styles/App.css";
 
+type imageData = {
+  urls: { full: string };
+};
+
 function App() {
-  const [data, setData] = useState({});
-  const [image, setImage] = useState({});
-  const [defaultImage, setDefaultImage] = useState({});
-  const [defaultData, setDefaultData] = useState({});
+  const [data, setData] = useState<data>({
+    current: { temperature: 32, weather_icons: "", weather_descriptions: [""] },
+    location: { name: "", localtime: 0 },
+  });
+  const [image, setImage] = useState<imageData[]>([]);
+  const [defaultImage, setDefaultImage] = useState<imageData[]>([]);
+  const [defaultData, setDefaultData] = useState({
+    current: { temperature: 32, weather_icons: "", weather_descriptions: [""] },
+    location: { name: "", localtime: 0 },
+  });
 
   const getDefault = async () => {
     const WeatherData = await fetchWeather("London");
@@ -25,6 +35,7 @@ function App() {
     getDefault();
     getDefaultImage();
   }, []);
+
   const getData = (data: any) => {
     setData(data);
   };
@@ -32,9 +43,14 @@ function App() {
   const getImage = (data: any) => {
     setImage(data);
   };
-  const backgroundImageLink = image[0]
-    ? image[Math.floor(Math.random() * 10)]?.urls?.full
-    : defaultImage[Math.floor(Math.random() * 10)]?.urls?.full;
+
+  const backgroundImageLink: string =
+    image.length > 1
+      ? image[0]
+        ? image[Math.floor(Math.random() * 10)]?.urls?.full
+        : defaultImage[Math.floor(Math.random() * 10)]?.urls?.full
+      : defaultImage[Math.floor(Math.random() * 10)]?.urls?.full;
+
   return (
     <div
       className="App"

@@ -1,10 +1,37 @@
 import React from "react";
 import "../styles/Weather.css";
-import { matchIcons } from "../utilities/matchIcons";
 
-function Weather(data: any, defaultData: any) {
-  const dataDesc = data.current?.weather_descriptions[0];
-  const defaultDesc = defaultData.current?.weather_descriptions[0];
+export interface data {
+  current: {
+    temperature: number;
+    weather_icons: string;
+    weather_descriptions: string[];
+  };
+  location: { name: string; localtime: number };
+}
+export interface defaultData {
+  current: {
+    temperature: number;
+    weather_icons: string;
+    weather_descriptions: string[];
+  };
+  location: { name: string; localtime: number };
+}
+
+const Weather: React.FC<{
+  data: data;
+  defaultData: defaultData;
+}> = ({ data, defaultData }) => {
+  const dataDesc =
+    Array.isArray(data.current?.weather_descriptions) &&
+    data.current?.weather_descriptions.length > 0
+      ? data.current?.weather_descriptions[0]
+      : "";
+  const defaultDesc =
+    Array.isArray(defaultData.current?.weather_descriptions) &&
+    defaultData.current?.weather_descriptions.length > 0
+      ? defaultData.current?.weather_descriptions[0]
+      : "";
   return (
     <div className="weather__container">
       <div className="the__weather__section">
@@ -51,6 +78,6 @@ function Weather(data: any, defaultData: any) {
       </div>
     </div>
   );
-}
+};
 
 export default Weather;

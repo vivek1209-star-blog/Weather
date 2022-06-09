@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import WeatherDetails from "./WeatherDetails";
+import WeatherDetails, { weatherData } from "./WeatherDetails";
 import { fetchWeather } from "../services/fetchWeather";
 import Input from "@material-ui/core/Input";
 import SearchIcon from "@material-ui/icons/Search";
 import "../styles/Navbar.css";
 import { fetchPhotos } from "../services/fetchPhotos";
 
-function Navbar(getData: any, getImage: any, defaultData: any) {
+const Navbar: React.FC<{
+  getData: (data: any) => void;
+  getImage: (data: any) => void;
+  defaultData: any;
+}> = ({ getData, getImage, defaultData }) => {
   const [query, setQuery] = useState("");
-  const [weather, setWeather] = useState({});
+  const [weather, setWeather] = useState<weatherData>({
+    current: { cloudcover: "", humidity: 0, wind_speed: 0 },
+  });
   const [image, setImage] = useState({});
 
-  const search = async (e) => {
+  const search = async (e: any) => {
     if (e.key === "Enter") {
       const WeatherData = await fetchWeather(query);
       const ImageLocation = await fetchPhotos(query);
@@ -21,7 +27,7 @@ function Navbar(getData: any, getImage: any, defaultData: any) {
     }
   };
 
-  const clickText = async (query: any) => {
+  const clickText = async (query: string) => {
     const WeatherData = await fetchWeather(query);
     const ImageLocation = await fetchPhotos(query);
     setImage(ImageLocation.results);
@@ -39,7 +45,6 @@ function Navbar(getData: any, getImage: any, defaultData: any) {
       <div className="weather__input__container">
         <Input
           className="navbar__input"
-          color="#ffffff"
           placeholder="Another Location"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -49,16 +54,24 @@ function Navbar(getData: any, getImage: any, defaultData: any) {
       </div>
       <div className="navbar__cities__container">
         <div className="cities">
-          <h3 onClick={(e) => clickText(e.target.textContent)}>Mumbai</h3>
-          <h3 onClick={(e) => clickText(e.target.textContent)}>London</h3>
-          <h3 onClick={(e) => clickText(e.target.textContent)}>New Delhi</h3>
-          <h3 onClick={(e) => clickText(e.target.textContent)}>Los Angeles</h3>
+          <div onClick={(e) => clickText("mumbai")}>
+            <h3>Mumbai</h3>
+          </div>
+          <div onClick={(e) => clickText("london")}>
+            <h3>London</h3>
+          </div>
+          <div onClick={(e) => clickText("New Delhi")}>
+            <h3>New Delhi</h3>
+          </div>
+          <div onClick={(e) => clickText("Los Angeles")}>
+            <h3>Los Angeles</h3>
+          </div>
         </div>
         <div className="arrange__cities"></div>
       </div>
       <WeatherDetails weather={weather} defaultData={defaultData} />
     </div>
   );
-}
+};
 
 export default Navbar;

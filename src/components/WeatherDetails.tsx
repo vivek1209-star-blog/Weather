@@ -1,7 +1,17 @@
 import React from "react";
 import "../styles/WeatherDetails.css";
 
-function WeatherDetails(weather: any, defaultData: any) {
+export interface weatherData {
+  current: { cloudcover: string; humidity: number; wind_speed: number };
+}
+export interface defaultData {
+  current: { cloudcover: string; humidity: number; wind_speed: number };
+}
+
+const WeatherDetails: React.FC<{
+  weather: weatherData;
+  defaultData: defaultData;
+}> = ({ weather, defaultData }) => {
   return (
     <div className="navbar__details__container">
       <div className="navbar__details__title">
@@ -65,6 +75,6 @@ function WeatherDetails(weather: any, defaultData: any) {
       </div>
     </div>
   );
-}
+};
 
 export default WeatherDetails;
